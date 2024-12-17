@@ -8,17 +8,27 @@
 </head>
 <body>
   <div id="board">
+    <!-- 警告灯 -->
     <div id="warning-light"></div>
+    
+    <!-- 列車情報 -->
     <div id="train-info">
       <p id="train-name">列車名: </p>
       <p id="train-line">路線: </p>
       <p id="next-station">次の駅: </p>
       <p id="remaining-stations">停車駅: </p>
+      <p id="train-approaching">接近中...</p>
     </div>
-    <div id="countdown-timer">残り時間: <span id="timer">30</span>秒</div>
+
+    <!-- カウントダウンタイマー -->
+    <div id="countdown-timer">
+      残り時間: <span id="timer">30</span>秒
+    </div>
   </div>
 
+  <!-- 音声ファイル -->
   <audio id="train-sound" src="train-sound.mp3" preload="auto"></audio>
+
   <script src="script.js"></script>
 </body>
 </html>
