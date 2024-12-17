@@ -1,36 +1,55 @@
-// 列車の移動設定
-const train = document.getElementById('train');
-const warningMessage = document.getElementById('warning-message');
-const trainSound = document.getElementById('train-sound');
+// 列車情報
+const trainName = "急行列車01号";
+const trainLine = "東海道線";
+const nextStation = "東京";
+const stations = ["品川", "新横浜", "名古屋", "京都", "大阪"];  // 停車駅リスト
+let timeUntilArrival = 30; // 初期接近時間（秒）
+let remainingStations = stations.length;  // 停車駅の数
 
-// 列車の速度 (秒単位)
-let trainSpeed = 5; // 列車が移動する時間 (秒)
+const trainSound = document.getElementById("train-sound");
+const trainNameElement = document.getElementById("train-name");
+const trainLineElement = document.getElementById("train-line");
+const nextStationElement = document.getElementById("next-station");
+const remainingStationsElement = document.getElementById("remaining-stations");
+const timerElement = document.getElementById("timer");
+const warningLight = document.getElementById("warning-light");
 
-// 列車の最大接近状態に到達する速度 (短い時間で完了)
-let maxSpeed = 1; // 最速のスピードに変更するまでの時間 (秒)
-
-// 初期の列車移動時間
-let currentSpeed = trainSpeed;
-
-// 列車の移動アニメーション
-function moveTrain() {
-  let position = -120;
-  let interval = setInterval(() => {
-    position += 5;
-    train.style.left = `${position}px`;
-
-    // 接近するにつれてスピードと色を変化させる
-    if (position > window.innerWidth - 120) {
-      currentSpeed = maxSpeed;  // 接近するごとに速度を上げる
-      train.style.backgroundColor = "#FF0000";  // 列車の色を赤に変更
-      warningMessage.style.display = "block";  // 警告メッセージ表示
-      trainSound.play();  // 警告音再生
-    }
-    if (position > window.innerWidth) {
-      clearInterval(interval);  // 列車が画面外に出たら移動停止
-    }
-  }, currentSpeed * 100);
+// 列車情報の更新
+function updateTrainInfo() {
+  trainNameElement.textContent = `列車名: ${trainName}`;
+  trainLineElement.textContent = `路線: ${trainLine}`;
+  nextStationElement.textContent = `次の駅: ${nextStation}`;
+  remainingStationsElement.textContent = `停車駅: ${stations.join(' → ')}`;
 }
 
-// 列車のアニメーション開始
-moveTrain();
+// カウントダウンの更新
+function countdownTimer() {
+  let interval = setInterval(() => {
+    timeUntilArrival--;
+    timerElement.textContent = timeUntilArrival;
+
+    // 接近時間が10秒を切ると警告灯と音を変更
+    if (timeUntilArrival <= 10) {
+      warningLight.style.backgroundColor = "#ff0000";  // 警告灯を赤に変更
+      trainSound.play();  // 警告音を再生
+    }
+
+    // 到着時
+    if (timeUntilArrival <= 0) {
+      clearInterval(interval);
+      timerElement.textContent = "到着しました！";
+      warningLight.style.backgroundColor = "#00ff00";  // 緑色に変更
+      nextStationElement.textContent = "列車が到着しました";
+      remainingStationsElement.textContent = "全駅通過しました";
+    }
+  }, 1000);
+}
+
+// 初期設定の実行
+function startTrainApproach() {
+  updateTrainInfo();
+  countdownTimer();
+}
+
+// 列車接近の開始
+startTrainApproach();
